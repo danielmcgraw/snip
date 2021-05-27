@@ -1,48 +1,73 @@
-### Create
-Create a list
+##### Text snippets on the command line. Quickly create topics and store snippets for easy recall and reuse.
+
+### Example
 ```
-> snip put <list_name>
+> snip put rust
+// rust topic created
+
+> snip rust docs https://docs.rs/
+< Entry inserted in to rust
+
+> snip put rust main https://www.rust-lang.org/
+< Entry inserted in to rust
+
+> snip show rust
+< main: https://www.rust-lang.org/
+< docs: https://docs.rs/
+
+> snip show rust docs
+< https://docs.rs/
+
+> snip get rust docs
+// docs value copied to your clipboard use with ctrl-v
 ```
 
-Create a list entry
+### Commands
+#### Create
+Create a topic
 ```
-> snip put <list_name> <entry_key> <entry_value>
-```
-
-### Get
-Get a specific entry from a list (copied in to your clipboard)
-```
-> snip get <list_name> <entry_key>
+> snip put <topic_name>
 ```
 
-### Print
-Print all entries for all lists
+Create a topic snippet
+```
+> snip put <topic_name> <snippet_key> <snippet_value>
+```
+
+#### Get
+Get a specific snippet from a topic (copied in to your clipboard)
+```
+> snip get <topic_name> <snippet_key>
+```
+
+#### Print
+Print all snippets for all topics
 ```
 > snip show all
 ```
 
-Print all entries for a list
+Print all snippets for a specific topic
 ```
-> snip show <list_name>
-```
-
-Print a specific entry from a list
-```
-> snip show <list_name> <entry_key>
+> snip show <topic_name>
 ```
 
-### Delete
-Delete a list
+Print a specific snippet from a specific topic
 ```
-> snip del <list_name>
-```
-
-Delete an entry from a list
-```
-> snip del <list_name> <entry_key>
+> snip show <topic_name> <snippet_key>
 ```
 
-Nuke all the lists (delete everything)
+#### Delete
+Delete a topic and all its snippets
+```
+> snip del <topic_name>
+```
+
+Delete a specific snippet from a topic
+```
+> snip del <topic_name> <snippet_key>
+```
+
+Nuke all the topics and their contents (delete everything)
 ```
 > snip nuke
 ```
