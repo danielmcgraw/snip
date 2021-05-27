@@ -4,28 +4,31 @@ use std::path::Path;
 use cli_clipboard::{ ClipboardContext, ClipboardProvider };
 
 extern crate dirs;
+
+const FILE_NAME: &str = ".snip";
+
 #[derive(Debug)]
 pub struct Store {
-    lists: HashMap<String, HashMap<String, String>>,
+    topics: HashMap<String, HashMap<String, String>>,
 }
 
 impl Store {
     pub fn new() -> Store {
-        let mut store = Store{ lists: HashMap::new() };
+        let mut store = Store{ topics: HashMap::new() };
         store.read_in();
         store
     }
 
     pub fn add_list(&mut self, list_name: &str) {
-        self.lists.entry(list_name.to_string()).or_insert(HashMap::new());
+        self.topics.entry(list_name.to_string()).or_insert(HashMap::new());
     }
 
     fn get_list(&self, list_name: &str) -> Option<&HashMap<String, String>> {
-        self.lists.get(list_name)
+        self.topics.get(list_name)
     }
 
     pub fn delete_list(&mut self, list_name: &str) {
-        self.lists.remove(list_name);
+        self.topics.remove(list_name);
     }
 
     pub fn print_list(&self, list_name: &str) {
@@ -37,7 +40,7 @@ impl Store {
     }
 
     pub fn add_list_entry(&mut self, list_name: &str, key: &str, val: &str) {
-        if let Some(list) = self.lists.get_mut(list_name) {
+        if let Some(list) = self.topics.get_mut(list_name) {
             list.entry(key.to_string()).or_insert(val.to_string());
             println!("Entry inserted in to {}", list_name);
         } else {
@@ -68,13 +71,13 @@ impl Store {
     }
 
     pub fn delete_list_entry(&mut self, list_name: &str, key: &str) {
-        if let Some(list) = self.lists.get_mut(list_name) {
+        if let Some(list) = self.topics.get_mut(list_name) {
             list.remove(key);
         }
     }
 
     pub fn print_all(&self) {
-        for key in self.lists.keys() {
+        for key in self.topics.keys() {
             println!("{}", key);
             println!("---------------");
             self.print_list(&key);
@@ -83,14 +86,14 @@ impl Store {
     }
 
     pub fn nuke(&mut self) {
-        self.lists = HashMap::new();
+        self.topics = HashMap::new();
     }
 
     pub fn write_out(&self) {
         if let Some(path) = dirs::home_dir() {
             let _ = fs::write(
-                format!("{}/.pow", path.display()),
-                serde_json::to_string(&self.lists).unwrap()
+                format!("{}/{}", path.display(), FILE_NAME),
+                serde_json::to_string(&self.topics).unwrap()
             );
         } else {
             println!("Impossible to get your home dir!");
@@ -99,10 +102,10 @@ impl Store {
 
     pub fn read_in(&mut self) {
         if let Some(path) = dirs::home_dir() {
-            if Path::new(&format!("{}/.pow", path.display())).exists() {
-                let file = fs::File::open(format!("{}/.pow", path.display()))
+            if Path::new(&format!("{}/{}", path.display(), FILE_NAME)).exists() {
+                let file = fs::File::open(format!("{}/{}", path.display(), FILE_NAME))
                     .expect("file should open read only");
-                self.lists = serde_json::from_reader(file)
+                self.topics = serde_json::from_reader(file)
                     .expect("file should be proper JSON");
             }
         }
@@ -116,16 +119,16 @@ mod test_store {
     #[test]
     fn new_store() {
         let store = Store::new();
-        assert!(store.lists.is_empty());
+        assert!(store.topics.is_empty());
     }
 
     #[test]
     fn create_a_list() {
         let list_name = "a_list";
         let mut store = Store::new();
-        assert!(store.lists.is_empty());
+        assert!(store.topics.is_empty());
         store.add_list(list_name);
-        assert!(!store.lists.is_empty());
+        assert!(!store.topics.is_empty());
         assert_ne!(store.get_list(list_name), None);
     }
 
@@ -173,7 +176,7 @@ mod test_store {
     fn delete_a_list() {
         let list_name = "a_list";
         let mut store = Store::new();
-        assert!(store.lists.is_empty());
+        assert!(store.topics.is_empty());
         store.add_list(list_name);
         assert_ne!(store.get_list(list_name), None);
 
@@ -202,9 +205,9 @@ mod test_store {
         store.add_list("list_2");
         store.add_list_entry("list_1", "entry_key", "entry_val");
 
-        assert_ne!(store.lists, HashMap::new());
+        assert_ne!(store.topics, HashMap::new());
         store.nuke();
-        assert_eq!(store.lists, HashMap::new());
+        assert_eq!(store.topics, HashMap::new());
 
     }
 }
