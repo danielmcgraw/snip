@@ -1,6 +1,6 @@
 [package]
 name = "snip"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["Daniel McGraw <dan.j.mcgraw@gmail.com>"]
 description = "Text snippets on the command line. Inspired by Zach Holman's Boom"
 license = "GPL-3.0-or-later"
