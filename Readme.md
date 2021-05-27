@@ -1,5 +1,10 @@
 ##### Text snippets on the command line. Quickly create topics and store snippets for easy recall and reuse.
 
+### Installation
+```
+> cargo install snip
+``` 
+
 ### Example
 ```
 > snip put rust
