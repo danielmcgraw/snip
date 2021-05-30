@@ -41,6 +41,11 @@ pub fn run_command(opts: Opts) {
                 eprintln!("Not able to get", );
             }
         },
+        "open" => {
+            if opts.topic != "" && opts.key != "" {
+                store.open_list_entry(&opts.topic, &opts.key);
+            }
+        }
         "put" => {
             if opts.topic != "" && opts.key != "" && opts.value != "" {
                 store.add_list_entry(&opts.topic, &opts.key, &opts.value);

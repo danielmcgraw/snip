@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 use cli_clipboard::{ ClipboardContext, ClipboardProvider };
+use url::Url;
+use webbrowser;
 
 extern crate dirs;
 
@@ -61,6 +63,13 @@ impl Store {
         let mut ctx = ClipboardContext::new().unwrap();
         if let Some(val) = self.get_list_entry(list_name, key) {
             ctx.set_contents(val.to_owned()).unwrap();
+        }
+    }
+
+    pub fn open_list_entry(&self, list_name: &str, key: &str) {
+        if let Some(val) = self.get_list_entry(list_name, key) {
+            let _ = Url::parse(val).expect(format!("'{}' is not a URL. Can't open.", val).as_str());
+            let _ = webbrowser::open(val);
         }
     }
 

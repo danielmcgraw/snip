@@ -3,7 +3,7 @@
 ### Installation
 ```
 > cargo install snip
-``` 
+```
 
 ### Example
 ```
@@ -44,6 +44,15 @@ Get a specific snippet from a topic (copied in to your clipboard)
 ```
 > snip get <topic_name> <snippet_key>
 ```
+
+#### Open
+Open a specific snippet from a topic in the default browser
+```
+> snip open <topic_name> <snippet_key>
+```
+ *Note:
+ This will only work for snippets that are shaped like a URL
+ If this is run on a non-URL shaped snippet the program with panic and exit*
 
 #### Print
 Print all snippets for all topics
