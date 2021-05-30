@@ -54,20 +54,20 @@ Open a specific snippet from a topic in the default browser
  This will only work for snippets that are shaped like a URL
  If this is run on a non-URL shaped snippet the program with panic and exit*
 
-#### Print
+#### Echo
 Print all snippets for all topics
 ```
-> snip show all
+> snip echo all
 ```
 
 Print all snippets for a specific topic
 ```
-> snip show <topic_name>
+> snip echo <topic_name>
 ```
 
 Print a specific snippet from a specific topic
 ```
-> snip show <topic_name> <snippet_key>
+> snip echo <topic_name> <snippet_key>
 ```
 
 #### Delete

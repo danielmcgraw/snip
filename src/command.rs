@@ -28,7 +28,7 @@ pub fn run_command(opts: Opts) {
                 store.copy_list_entry(&opts.topic, &opts.key);
             }
         },
-        "show" => {
+        "show" | "echo" => {
             if opts.topic != "" && opts.key != "" {
                 store.print_list_entry(&opts.topic, &opts.key);
             } else if opts.topic != "" {
