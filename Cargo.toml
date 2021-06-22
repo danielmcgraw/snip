@@ -1,9 +1,10 @@
 [package]
 name = "snip"
-version = "0.3.1"
+version = "0.3.2"
 authors = ["Daniel McGraw <dan.j.mcgraw@gmail.com>"]
 description = "Text snippets on the command line. Inspired by Zach Holman's Boom"
-categories = ["cli", "text", "terminal", "command line", "text snippets"]
+categories = ["command-line-utilities"]
+keywords = ["cli", "text", "terminal", "snippets"]
 repository = "https://github.com/danielmcgraw/snip"
 license = "GPL-3.0-or-later"
 edition = "2018"
