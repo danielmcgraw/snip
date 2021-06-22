@@ -85,3 +85,10 @@ Nuke all the topics and their contents (delete everything)
 ```
 > snip nuke
 ```
+#### Export
+Export your .snip file (create .zip at location for transport)
+```
+> snip export <path e.g. ~/Desktop>
+```
+*Note:  
+This would create a snip.zip file on your Desktop that you can later import*
