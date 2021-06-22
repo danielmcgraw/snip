@@ -1,9 +1,11 @@
 use std::collections::HashMap;
-use std::fs;
+use std::fs::{File, write};
+use std::io::{Read, Write};
 use std::path::Path;
 use cli_clipboard::{ ClipboardContext, ClipboardProvider };
 use url::Url;
 use webbrowser;
+use zip::{CompressionMethod, ZipWriter, write};
 
 extern crate dirs;
 
@@ -98,9 +100,30 @@ impl Store {
         self.topics = HashMap::new();
     }
 
+    pub fn export(&self, path: &str) {
+        let options = write::FileOptions::default()
+            .compression_method(CompressionMethod::Deflated)
+            .unix_permissions(0o755);
+        let zip_file = File::create(&format!("{}/{}", path, "snip.zip")).unwrap();
+        let mut zip = ZipWriter::new(zip_file);
+        let mut buffer = Vec::new();
+
+        if let Some(path) = dirs::home_dir() {
+            let _ = zip.start_file(".snip", options);
+            let mut f = File::open(format!("{}/{}", path.display(), FILE_NAME)).expect(".snip file cant be read");
+
+            f.read_to_end(&mut buffer).expect("Can't read .snip file");
+            zip.write_all(&*buffer).expect("Can't write zip file");
+            buffer.clear();
+        } else {
+            println!("Impossible to get your home dir!");
+        }
+        zip.finish().expect("Failed to write zip file");
+    }
+
     pub fn write_out(&self) {
         if let Some(path) = dirs::home_dir() {
-            let _ = fs::write(
+            let _ = write(
                 format!("{}/{}", path.display(), FILE_NAME),
                 serde_json::to_string(&self.topics).unwrap()
             );
@@ -112,7 +135,7 @@ impl Store {
     pub fn read_in(&mut self) {
         if let Some(path) = dirs::home_dir() {
             if Path::new(&format!("{}/{}", path.display(), FILE_NAME)).exists() {
-                let file = fs::File::open(format!("{}/{}", path.display(), FILE_NAME))
+                let file = File::open(format!("{}/{}", path.display(), FILE_NAME))
                     .expect("file should open read only");
                 self.topics = serde_json::from_reader(file)
                     .expect("file should be proper JSON");
@@ -165,21 +188,6 @@ mod test_store {
         let mut ctx = ClipboardContext::new().unwrap();
         assert_eq!(ctx.get_contents().unwrap(), entry_val);
     }
-
-    // #[test]
-    // fn print_all_entries_for_all_lists() {
-    //     unimplemented!("Not sure how to test this");
-    // }
-    //
-    // #[test]
-    // fn print_all_entries_for_a_list() {
-    //     unimplemented!("Not sure how to test this");
-    // }
-    //
-    // #[test]
-    // fn print_a_specific_entry_from_a_list() {
-    //     unimplemented!("Not sure how to test this");
-    // }
 
     #[test]
     fn delete_a_list() {

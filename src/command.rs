@@ -61,11 +61,18 @@ pub fn run_command(opts: Opts) {
             } else if opts.topic != "" {
                 store.delete_list(&opts.topic);
             } else {
-                eprintln!("Not able to put", );
+                eprintln!("Not able to del", );
             }
         },
         "nuke" => {
             store.nuke();
+        },
+        "export" => {
+            if opts.topic != "" {
+                store.export(&opts.topic);
+            } else {
+                eprintln!("Please provide the path for the exported data file", );
+            }
         }
         _ => println!("unrecognized command"),
     }
